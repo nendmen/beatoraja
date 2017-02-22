@@ -2,29 +2,31 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project beatoraja">
 
 	<property name="build.src" value="src" />
-	<property name="build.dest" value="build" />
+	<property name="build.dest" value="dest" />
+	<property name="build.build" value="build" />
 
 	<path id="build.lib">
-	   <fileset dir="lib" includes="*.jar" />
+		<fileset dir="lib" includes="*.jar" />
 	</path>
-	
+
 	<target name="clean">
-	   <delete dir="${build.dest}" />
-	   <mkdir dir="${build.dest}" />
+		<mkdir dir="${build.dest}" />
+		<delete dir="${build.build}" />
+		<mkdir dir="${build.build}" />
 	</target>
-	
+
 	<target name="compile" depends="clean">
-		<javac classpathref="build.lib" srcdir="${build.src}" debug="${debug}" destdir="${build.dest}" />
+		<javac classpathref="build.lib" srcdir="${build.src}" destdir="./${build.build}" />
 	</target>
 
 	<target name="create_run_jar" depends="compile">
-		<jar destfile="./beatoraja.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="./${build.dest}/beatoraja.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="bms.player.beatoraja.MainLoader" />
 				<attribute name="Bundle-NativeCode" value="jasiohost32.dll;jasiohost64.dll" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<fileset dir="./bin" />
+			<fileset dir="./${build.build}" />
 			<fileset dir="./src/natives" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers-desktop-natives.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers-desktop.jar" />
